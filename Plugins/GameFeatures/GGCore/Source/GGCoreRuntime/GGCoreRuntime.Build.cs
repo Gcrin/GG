@@ -29,6 +29,8 @@ public class GGCoreRuntime : ModuleRules
 				"LyraGame",
 				"ModularGameplay",
 				"CommonGame",
+				"ModularGameplayActors",
+				"Niagara",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
