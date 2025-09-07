@@ -19,4 +19,13 @@ public:
 
 protected:
 	virtual void UpdateView(float DeltaTime) override;
+	virtual FVector GetPivotLocation() const override;
+
+	// 카메라의 위치를 조정하기 위한 오프셋 변수입니다.
+	UPROPERTY(EditDefaultsOnly, Category = "First Person")
+	FVector ViewOffset;
+
+	// 피벗 위치를 조정하기 위한 변수입니다. 캐릭터의 기본 눈 위치를 기준으로 합니다.
+	UPROPERTY(EditDefaultsOnly, Category = "First Person")
+	FVector PivotOffset;
 };

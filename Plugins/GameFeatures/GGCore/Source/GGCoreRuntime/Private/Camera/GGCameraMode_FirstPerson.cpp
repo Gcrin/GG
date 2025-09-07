@@ -6,17 +6,26 @@
 UGGCameraMode_FirstPerson::UGGCameraMode_FirstPerson()
 {
 	FieldOfView = 90.0f;
+	ViewOffset = FVector::ZeroVector;
+	PivotOffset = FVector::ZeroVector;
 }
 
 void UGGCameraMode_FirstPerson::UpdateView(float DeltaTime)
 {
 	Super::UpdateView(DeltaTime);
 
-	const FVector PivotLocation = GetPivotLocation();
-	const FRotator PivotRotation = GetPivotRotation();
+	if (!ViewOffset.IsZero())
+	{
+		const FRotator ViewRotation = GetCameraModeView().Rotation;
+		View.Location += ViewRotation.RotateVector(ViewOffset);
+	}
+}
 
-	View.Location = PivotLocation;
-	View.Rotation = PivotRotation;
-	View.ControlRotation = PivotRotation;
-	View.FieldOfView = FieldOfView;
+FVector UGGCameraMode_FirstPerson::GetPivotLocation() const
+{
+	const FVector BasePivotLocation = Super::GetPivotLocation();
+
+	const FVector NewPivotLocation = BasePivotLocation + PivotOffset;
+
+	return NewPivotLocation;
 }
