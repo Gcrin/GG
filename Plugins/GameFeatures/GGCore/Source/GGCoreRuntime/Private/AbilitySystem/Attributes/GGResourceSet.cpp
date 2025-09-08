@@ -4,6 +4,7 @@
 #include "AbilitySystem/Attributes/GGResourceSet.h"
 
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 UGGResourceSet::UGGResourceSet()
@@ -12,6 +13,12 @@ UGGResourceSet::UGGResourceSet()
 	  , Stamina(100.0f)
 	  , MaxStamina(100.0f)
 {
+	bOutOfStamina = false;
+	bOutOfMana = false;
+	MaxManaBeforeAttributeChange = 0.0f;
+	ManaBeforeAttributeChange = 0.0f;
+	MaxStaminaBeforeAttributeChange = 0.0f;
+	StaminaBeforeAttributeChange = 0.0f;
 }
 
 void UGGResourceSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -37,7 +44,7 @@ void UGGResourceSet::OnRep_Mana(const FGameplayAttributeData& OldValue)
 	{
 		OnOutOfMana.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentMana);
 	}
-	
+
 	bOutOfMana = (CurrentMana <= 0.0f);
 }
 
@@ -61,7 +68,7 @@ void UGGResourceSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 	{
 		OnOutOfStamina.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentStamina);
 	}
-	
+
 	bOutOfStamina = (CurrentStamina <= 0.0f);
 }
 
@@ -74,12 +81,84 @@ void UGGResourceSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 
 bool UGGResourceSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
 {
-	return Super::PreGameplayEffectExecute(Data);
+	if (!Super::PreGameplayEffectExecute(Data))
+	{
+		return false;
+	}
+
+	ManaBeforeAttributeChange = GetMana();
+	MaxManaBeforeAttributeChange = GetMaxMana();
+
+	StaminaBeforeAttributeChange = GetStamina();
+	MaxStaminaBeforeAttributeChange = GetMaxStamina();
+
+	return true;
 }
 
 void UGGResourceSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+
+	float MinimumMana = 0.0f;
+	float MinimumStamina = 0.0f;
+
+	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+	AActor* Instigator = EffectContext.GetOriginalInstigator();
+	AActor* Causer = EffectContext.GetEffectCauser();
+
+	if (Data.EvaluatedData.Attribute == GetManaCostAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana() - GetManaCost(), MinimumMana, GetMaxMana()));
+		SetManaCost(0.0f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaGainAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana() + GetManaGain(), MinimumMana, GetMaxMana()));
+		SetManaGain(0.0f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetStaminaCostAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina() - GetStaminaCost(), MinimumStamina, GetMaxStamina()));
+		SetStaminaCost(0.0f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetStaminaGainAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina() + GetStaminaGain(), MinimumStamina, GetMaxStamina()));
+		SetStaminaGain(0.0f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetMaxManaAttribute())
+	{
+		OnMaxManaChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude,
+		                           MaxManaBeforeAttributeChange, GetMaxMana());
+	}
+	else if (Data.EvaluatedData.Attribute == GetMaxStaminaAttribute())
+	{
+		OnMaxStaminaChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude,
+		                              MaxStaminaBeforeAttributeChange, GetMaxStamina());
+	}
+
+	if (GetMana() != ManaBeforeAttributeChange)
+	{
+		OnManaChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude,
+		                        ManaBeforeAttributeChange, GetMana());
+	}
+
+	if (GetStamina() != StaminaBeforeAttributeChange)
+	{
+		OnStaminaChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude,
+		                           StaminaBeforeAttributeChange, GetStamina());
+	}
+
+	bOutOfMana = (GetMana() <= 0.0f);
+	bOutOfStamina = (GetStamina() <= 0.0f);
 }
 
 void UGGResourceSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -117,6 +196,16 @@ void UGGResourceSet::PostAttributeChange(const FGameplayAttribute& Attribute, fl
 			check(ASC);
 			ASC->ApplyModToAttribute(GetStaminaAttribute(), EGameplayModOp::Override, NewValue);
 		}
+	}
+
+	if (bOutOfMana && (GetMana() > 0.0f))
+	{
+		bOutOfMana = false;
+	}
+
+	if (bOutOfStamina && (GetStamina() > 0.0f))
+	{
+		bOutOfStamina = false;
 	}
 }
 

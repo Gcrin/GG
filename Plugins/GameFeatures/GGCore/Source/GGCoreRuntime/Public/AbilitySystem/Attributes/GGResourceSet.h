@@ -23,6 +23,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UGGResourceSet, MaxMana);
 	ATTRIBUTE_ACCESSORS(UGGResourceSet, Stamina);
 	ATTRIBUTE_ACCESSORS(UGGResourceSet, MaxStamina);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, ManaCost);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, ManaGain);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, StaminaCost);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, StaminaGain);
 
 	mutable FLyraAttributeEvent OnManaChanged;
 	mutable FLyraAttributeEvent OnMaxManaChanged;
@@ -77,5 +81,17 @@ private:
 	float ManaBeforeAttributeChange;
 	float MaxStaminaBeforeAttributeChange;
 	float StaminaBeforeAttributeChange;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaCost;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaGain;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaminaCost;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaminaGain;
 
 };
