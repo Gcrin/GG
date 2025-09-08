@@ -13,5 +13,14 @@ UCLASS()
 class GGCORERUNTIME_API AGGPlayerState : public ALyraPlayerState
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	AGGPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+private:
+
+	UPROPERTY()
+	TObjectPtr<const class UGGResourceSet> ResourceSet;
+
 };

@@ -2,16 +2,72 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/LyraAttributeSet.h"
+
 #include "GGResourceSet.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class GGCORERUNTIME_API UGGResourceSet : public ULyraAttributeSet
 {
 	GENERATED_BODY()
+
+public:
+
+	UGGResourceSet();
+
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, Mana);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, MaxMana);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, Stamina);
+	ATTRIBUTE_ACCESSORS(UGGResourceSet, MaxStamina);
+
+	mutable FLyraAttributeEvent OnManaChanged;
+	mutable FLyraAttributeEvent OnMaxManaChanged;
 	
+	mutable FLyraAttributeEvent OnStaminaChanged;
+	mutable FLyraAttributeEvent OnMaxStaminaChanged;
+	
+	mutable FLyraAttributeEvent OnOutOfMana;
+	mutable FLyraAttributeEvent OnOutOfStamina;
+
+protected:
+
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_Stamina(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
+
+	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+
+	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
+	
+private:
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Mana;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxMana;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stamina, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Stamina;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxStamina;
+
 };
