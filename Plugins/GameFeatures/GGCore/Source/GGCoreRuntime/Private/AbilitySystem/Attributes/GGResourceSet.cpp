@@ -8,9 +8,9 @@
 
 UGGResourceSet::UGGResourceSet()
 	: Mana(100.0f)
-	, MaxMana(100.0f)
-	, Stamina(100.0f)
-	, MaxStamina(100.0f)
+	  , MaxMana(100.0f)
+	  , Stamina(100.0f)
+	  , MaxStamina(100.0f)
 {
 }
 
@@ -27,21 +27,49 @@ void UGGResourceSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 void UGGResourceSet::OnRep_Mana(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGResourceSet, Mana, OldValue);
+
+	const float CurrentMana = GetMana();
+	const float EstimatedMagnitude = CurrentMana - OldValue.GetCurrentValue();
+
+	OnManaChanged.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentMana);
+
+	if (!bOutOfMana && CurrentMana <= 0.0f)
+	{
+		OnOutOfMana.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentMana);
+	}
+	
+	bOutOfMana = (CurrentMana <= 0.0f);
 }
 
 void UGGResourceSet::OnRep_MaxMana(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGResourceSet, MaxMana, OldValue);
+
+	OnMaxManaChanged.Broadcast(nullptr, nullptr, nullptr, GetMaxMana() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMaxMana());
 }
 
 void UGGResourceSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGResourceSet, Stamina, OldValue);
+
+	const float CurrentStamina = GetStamina();
+	const float EstimatedMagnitude = CurrentStamina - OldValue.GetCurrentValue();
+
+	OnStaminaChanged.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentStamina);
+
+	if (!bOutOfStamina && CurrentStamina <= 0.0f)
+	{
+		OnOutOfStamina.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentStamina);
+	}
+	
+	bOutOfStamina = (CurrentStamina <= 0.0f);
 }
 
 void UGGResourceSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGResourceSet, MaxStamina, OldValue);
+
+	OnMaxStaminaChanged.Broadcast(nullptr, nullptr, nullptr, GetMaxStamina() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMaxStamina());
 }
 
 bool UGGResourceSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)

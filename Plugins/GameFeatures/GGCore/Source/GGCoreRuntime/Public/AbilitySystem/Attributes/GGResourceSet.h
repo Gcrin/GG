@@ -70,4 +70,12 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "GG|Resource", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxStamina;
 
+	bool bOutOfMana;
+	bool bOutOfStamina;
+
+	float MaxManaBeforeAttributeChange;
+	float ManaBeforeAttributeChange;
+	float MaxStaminaBeforeAttributeChange;
+	float StaminaBeforeAttributeChange;
+
 };
