@@ -62,9 +62,14 @@ protected:
 	UFUNCTION()
 	virtual void OnRep_CastSpeed(const FGameplayAttributeData& OldValue);
 
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
+
 private:
 
-	// 치명타 확률 (예: 5.0 = 5%)
+	// 치명타 확률 (예: 5.0 = 5%, 0% ~ 100%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CritChance;
 
@@ -80,19 +85,19 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageAmp;
 
-	// 공격 속도 (예: 1.0 = 100%, 1.2 = 120%)
+	// 공격 속도 (예: 0.2 = 20%, 1.2 = 120%, 최소 20% ~)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackSpeed;
 
-	// 물리 관통력 (수치 또는 %)
+	// 물리 관통력 (0% ~ 100%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalPenetration;
 
-	// 마법 관통력 (수치 또는 %)
+	// 마법 관통력 (0% ~ 100%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicPenetration;
 
-	// 시전 속도 (예: 1.0 = 100%, 1.2 = 120%)
+	// 시전 속도 (예: 0.2 = 20%, 1.2 = 120%, 최소 20% ~)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CastSpeed;
 };

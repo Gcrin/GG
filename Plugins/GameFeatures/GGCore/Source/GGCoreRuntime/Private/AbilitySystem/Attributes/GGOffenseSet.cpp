@@ -88,3 +88,28 @@ void UGGOffenseSet::OnRep_CastSpeed(const FGameplayAttributeData& OldValue)
 	OnCastSpeedChanged.Broadcast(nullptr, nullptr, nullptr, GetCastSpeed() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetCastSpeed());
 }
 
+void UGGOffenseSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+}
+
+void UGGOffenseSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+}
+
+void UGGOffenseSet::ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	if (Attribute == GetAttackSpeedAttribute() || Attribute == GetCastSpeedAttribute())
+	{
+		NewValue = FMath::Max(NewValue, 0.2f);
+	}
+	else if (Attribute == GetCritChanceAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, 100.0f);
+	}
+	else if (Attribute == GetPhysicalPenetrationAttribute() || Attribute == GetMagicPenetrationAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, 100.0f);
+	}
+}
