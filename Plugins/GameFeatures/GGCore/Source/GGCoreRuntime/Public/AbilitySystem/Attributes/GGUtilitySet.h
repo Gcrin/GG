@@ -23,12 +23,16 @@ public:
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, HealthRegenRate);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MoveSpeed);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, CooldownReduction);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, PhysicalDamageAbsorption);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MagicDamageAbsorption);
 
 	mutable FLyraAttributeEvent OnStaminaRegenRateChanged;
 	mutable FLyraAttributeEvent OnManaRegenRateChanged;
 	mutable FLyraAttributeEvent OnHealthRegenRateChanged;
 	mutable FLyraAttributeEvent OnMoveSpeedChanged;
 	mutable FLyraAttributeEvent OnCooldownReductionChanged;
+	mutable FLyraAttributeEvent OnPhysicalDamageAbsorptionChanged;
+	mutable FLyraAttributeEvent OnMagicDamageAbsorptionChanged;
 
 protected:
 
@@ -46,6 +50,17 @@ protected:
 
 	UFUNCTION()
 	virtual void OnRep_CooldownReduction(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_MagicDamageAbsorption(const FGameplayAttributeData& OldValue);
+
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	
+	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
 
 private:
 
@@ -68,4 +83,12 @@ private:
 	// 스킬 쿨타임 감소 (예: 10.0 = 10% 감소)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CooldownReduction, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CooldownReduction;
+
+	// 물리 피해 흡수 (준 물리 피해의 일부를 체력으로 전환, 예: 5.0 = 5% 흡수)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData PhysicalDamageAbsorption;
+
+	// 마법 피해 흡수 (준 마법 피해의 일부를 체력으로 전환, 예: 5.0 = 5% 흡수)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MagicDamageAbsorption;
 };

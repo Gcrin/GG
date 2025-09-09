@@ -11,6 +11,8 @@ UGGUtilitySet::UGGUtilitySet()
 	, HealthRegenRate(0.0f)
 	, MoveSpeed(600.0f)
 	, CooldownReduction(0.0f)
+	, PhysicalDamageAbsorption(0.0f)
+	, MagicDamageAbsorption(0.0f)
 {
 }
 
@@ -24,6 +26,8 @@ void UGGUtilitySet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, ManaRegenRate, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegenRate, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, CooldownReduction, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, PhysicalDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, MagicDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
 }
 
 void UGGUtilitySet::OnRep_StaminaRegenRate(const FGameplayAttributeData& OldValue)
@@ -59,4 +63,36 @@ void UGGUtilitySet::OnRep_CooldownReduction(const FGameplayAttributeData& OldVal
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MoveSpeed, OldValue);
 
 	OnMoveSpeedChanged.Broadcast(nullptr, nullptr, nullptr, GetMoveSpeed() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMoveSpeed());
+}
+
+void UGGUtilitySet::OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, PhysicalDamageAbsorption, OldValue);
+
+	OnPhysicalDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetPhysicalDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetPhysicalDamageAbsorption());
+}
+
+void UGGUtilitySet::OnRep_MagicDamageAbsorption(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MagicDamageAbsorption, OldValue);
+
+	OnMagicDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetMagicDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMagicDamageAbsorption());
+}
+
+void UGGUtilitySet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+	
+	ClampAttribute(Attribute, NewValue);
+}
+
+void UGGUtilitySet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	ClampAttribute(Attribute, NewValue);
+}
+
+void UGGUtilitySet::ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const
+{
 }
