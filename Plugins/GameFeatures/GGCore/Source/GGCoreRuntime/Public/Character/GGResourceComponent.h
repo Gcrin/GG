@@ -7,6 +7,7 @@
 #include "GGResourceComponent.generated.h"
 
 
+struct FGameplayEffectSpec;
 struct FOnAttributeChangeData;
 class UGGResourceSet;
 class ULyraAbilitySystemComponent;
@@ -72,8 +73,11 @@ protected:
 
 	void ClearGameplayTags();
 
-	virtual void HandleManaChanged(FOnAttributeChangeData& ChangeData);
-	virtual void HandleStaminaChanged(FOnAttributeChangeData& ChangeData);
+	virtual void HandleManaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+	virtual void HandleMaxManaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+
+	virtual void HandleStaminaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+	virtual void HandleMaxStaminaChanged(AActor* Instigator, AActor* Causer, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
 protected:
 
