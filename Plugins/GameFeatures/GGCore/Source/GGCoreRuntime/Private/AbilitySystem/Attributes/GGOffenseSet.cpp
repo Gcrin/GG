@@ -91,11 +91,15 @@ void UGGOffenseSet::OnRep_CastSpeed(const FGameplayAttributeData& OldValue)
 void UGGOffenseSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	Super::PreAttributeBaseChange(Attribute, NewValue);
+
+	ClampAttribute(Attribute, NewValue);
 }
 
 void UGGOffenseSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
+
+	ClampAttribute(Attribute, NewValue);
 }
 
 void UGGOffenseSet::ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const
