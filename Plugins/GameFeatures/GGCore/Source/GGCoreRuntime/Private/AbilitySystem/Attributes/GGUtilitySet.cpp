@@ -6,6 +6,11 @@
 #include "Net/UnrealNetwork.h"
 
 UGGUtilitySet::UGGUtilitySet()
+	: StaminaRegenRate(0.0f)
+	, ManaRegenRate(0.0f)
+	, HealthRegenRate(0.0f)
+	, MoveSpeed(600.0f)
+	, CooldownReduction(0.0f)
 {
 }
 
