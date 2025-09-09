@@ -23,4 +23,13 @@ private:
 	UPROPERTY()
 	TObjectPtr<const class UGGResourceSet> ResourceSet;
 
+	UPROPERTY()
+	TObjectPtr<const class UGGOffenseSet> OffenseSet;
+
+	UPROPERTY()
+	TObjectPtr<const class UGGDefenseSet> DefenseSet;
+
+	UPROPERTY()
+	TObjectPtr<const class UGGUtilitySet> UtilitySet;
+
 };
