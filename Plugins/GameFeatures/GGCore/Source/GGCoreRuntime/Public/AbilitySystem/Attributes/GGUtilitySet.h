@@ -80,42 +80,42 @@ protected:
 private:
 
 	// n초당 기력 회복 (수치)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegen, Category = "GG|Utility", Meta = (DisplayName = "n초당 기력 회복", AllowPrivateAccess = true))
 	FGameplayAttributeData StaminaRegen;
 
 	// n초당 기력 회복 (%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegenPercent, Category = "GG|Utility", Meta = (DisplayName = "n초당 기력 회복 %", AllowPrivateAccess = true))
 	FGameplayAttributeData StaminaRegenPercent;
 
 	// n초당 마력 회복 (수치)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegen, Category = "GG|Utility", Meta = (DisplayName = "n초당 마력 회복", AllowPrivateAccess = true))
 	FGameplayAttributeData ManaRegen;
 
 	// n초당 마력 회복 (%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegenPercent, Category = "GG|Utility", Meta = (DisplayName = "n초당 마력 회복 %", AllowPrivateAccess = true))
 	FGameplayAttributeData ManaRegenPercent;
 
 	// n초당 체력 회복 (수치)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegen, Category = "GG|Utility", Meta = (DisplayName = "n초당 체력 회복", AllowPrivateAccess = true))
 	FGameplayAttributeData HealthRegen;
 
 	// n초당 체력 회복 (%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegenPercent, Category = "GG|Utility", Meta = (DisplayName = "n초당 체력 회복 %", AllowPrivateAccess = true))
 	FGameplayAttributeData HealthRegenPercent;
 
 	// 이동 속도 (수치, 최소 0.0f)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MoveSpeed, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MoveSpeed, Category = "GG|Utility", Meta = (DisplayName = "이동 속도", AllowPrivateAccess = true))
 	FGameplayAttributeData MoveSpeed;
 
 	// 스킬 쿨타임 감소 (예: 0.1 = 10% 감소)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CooldownReduction, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CooldownReduction, Category = "GG|Utility", Meta = (DisplayName = "스킬 쿨타임 감소", AllowPrivateAccess = true))
 	FGameplayAttributeData CooldownReduction;
 
 	// 물리 피해 흡수 (준 물리 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAbsorption, Category = "GG|Utility", Meta = (DisplayName = "물리 피해 흡수", AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageAbsorption;
 
 	// 마법 피해 흡수 (준 마법 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAbsorption, Category = "GG|Utility", Meta = (DisplayName = "마법 피해 흡수", AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageAbsorption;
 };

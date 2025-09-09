@@ -70,34 +70,34 @@ protected:
 private:
 
 	// 치명타 확률 (예: 0.05 = 5%, 0% ~ 100%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (DisplayName = "치명타 확률", AllowPrivateAccess = true))
 	FGameplayAttributeData CritChance;
 
 	// 치명타 피해량 (예: 2.0 = 200%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritDamage, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritDamage, Category = "GG|Offense", Meta = (DisplayName = "치명타 피해량", AllowPrivateAccess = true))
 	FGameplayAttributeData CritDamage;
 
 	// 물리 피해 증폭 (예: 0.1 = 10%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAmp, Category = "GG|Offense", Meta = (DisplayName = "물리 피해 증폭", AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageAmp;
 
 	// 마법 피해 증폭 (예: 0.1 = 10%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAmp, Category = "GG|Offense", Meta = (DisplayName = "마법 피해 증폭", AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageAmp;
 
 	// 공격 속도 (예: 0.2 = 20%, 1.2 = 120%, 최소 20% ~)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "GG|Offense", Meta = (DisplayName = "공격 속도", AllowPrivateAccess = true))
 	FGameplayAttributeData AttackSpeed;
 
 	// 물리 관통력 (0% ~ 100%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalPenetration, Category = "GG|Offense", Meta = (DisplayName = "물리 관통력", AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalPenetration;
 
 	// 마법 관통력 (0% ~ 100%)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicPenetration, Category = "GG|Offense", Meta = (DisplayName = "마법 관통력", AllowPrivateAccess = true))
 	FGameplayAttributeData MagicPenetration;
 
 	// 시전 속도 (예: 0.2 = 20%, 1.2 = 120%, 최소 20% ~)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "GG|Offense", Meta = (DisplayName = "시전 속도", AllowPrivateAccess = true))
 	FGameplayAttributeData CastSpeed;
 };

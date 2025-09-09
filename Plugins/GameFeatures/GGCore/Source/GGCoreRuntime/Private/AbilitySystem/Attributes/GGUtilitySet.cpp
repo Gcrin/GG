@@ -80,16 +80,16 @@ void UGGUtilitySet::OnRep_HealthRegenPercent(const FGameplayAttributeData& OldVa
 
 void UGGUtilitySet::OnRep_MoveSpeed(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, CooldownReduction, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MoveSpeed, OldValue);
 
-	OnCooldownReductionChanged.Broadcast(nullptr, nullptr, nullptr, GetCooldownReduction() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetCooldownReduction());
+	OnMoveSpeedChanged.Broadcast(nullptr, nullptr, nullptr, GetMoveSpeed() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMoveSpeed());
 }
 
 void UGGUtilitySet::OnRep_CooldownReduction(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MoveSpeed, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, CooldownReduction, OldValue);
 
-	OnMoveSpeedChanged.Broadcast(nullptr, nullptr, nullptr, GetMoveSpeed() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMoveSpeed());
+	OnCooldownReductionChanged.Broadcast(nullptr, nullptr, nullptr, GetCooldownReduction() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetCooldownReduction());
 }
 
 void UGGUtilitySet::OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue)
