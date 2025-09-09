@@ -44,11 +44,11 @@ protected:
 
 private:
 
-	// 물리 피해 감소 (예: 10.0 = 10% 감소)
+	// 물리 피해 감소 (예: 0.1 = 10% 감소)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageReduction, Category = "GG|Defense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageReduction;
 
-	// 마법 피해 감소 (예: 10.0 = 10% 감소)
+	// 마법 피해 감소 (예: 0.1 = 10% 감소)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageReduction, Category = "GG|Defense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageReduction;
 

@@ -110,10 +110,10 @@ void UGGOffenseSet::ClampAttribute(const FGameplayAttribute& Attribute, float& N
 	}
 	else if (Attribute == GetCritChanceAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, 100.0f);
+		NewValue = FMath::Clamp(NewValue, 0.0f, 1.0f);
 	}
 	else if (Attribute == GetPhysicalPenetrationAttribute() || Attribute == GetMagicPenetrationAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, 100.0f);
+		NewValue = FMath::Clamp(NewValue, 0.0f, 1.0f);
 	}
 }

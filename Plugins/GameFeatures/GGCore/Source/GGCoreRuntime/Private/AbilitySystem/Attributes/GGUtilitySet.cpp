@@ -6,9 +6,12 @@
 #include "Net/UnrealNetwork.h"
 
 UGGUtilitySet::UGGUtilitySet()
-	: StaminaRegenRate(0.0f)
-	, ManaRegenRate(0.0f)
-	, HealthRegenRate(0.0f)
+	: StaminaRegen(0.0f)
+	, StaminaRegenPercent(0.0f)
+	, ManaRegen(0.0f)
+	, ManaRegenPercent(0.0f)
+	, HealthRegen(0.0f)
+	, HealthRegenPercent(0.0f)
 	, MoveSpeed(600.0f)
 	, CooldownReduction(0.0f)
 	, PhysicalDamageAbsorption(0.0f)
@@ -22,33 +25,57 @@ void UGGUtilitySet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, MoveSpeed, COND_None, REPNOTIFY_Always);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, StaminaRegenRate, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, ManaRegenRate, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegenRate, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, StaminaRegen, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, StaminaRegenPercent, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, ManaRegen, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, ManaRegenPercent, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegen, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegenPercent, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, CooldownReduction, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, PhysicalDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, MagicDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
 }
 
-void UGGUtilitySet::OnRep_StaminaRegenRate(const FGameplayAttributeData& OldValue)
+void UGGUtilitySet::OnRep_StaminaRegen(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, StaminaRegenRate, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, StaminaRegen, OldValue);
 
-	OnStaminaRegenRateChanged.Broadcast(nullptr, nullptr, nullptr, GetStaminaRegenRate() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetStaminaRegenRate());
+	OnStaminaRegenChanged.Broadcast(nullptr, nullptr, nullptr, GetStaminaRegen() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetStaminaRegen());
 }
 
-void UGGUtilitySet::OnRep_ManaRegenRate(const FGameplayAttributeData& OldValue)
+void UGGUtilitySet::OnRep_StaminaRegenPercent(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, ManaRegenRate, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, StaminaRegenPercent, OldValue);
 
-	OnManaRegenRateChanged.Broadcast(nullptr, nullptr, nullptr, GetManaRegenRate() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetManaRegenRate());
+	OnStaminaRegenPercentChanged.Broadcast(nullptr, nullptr, nullptr, GetStaminaRegenPercent() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetStaminaRegenPercent());
 }
 
-void UGGUtilitySet::OnRep_HealthRegenRate(const FGameplayAttributeData& OldValue)
+void UGGUtilitySet::OnRep_ManaRegen(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, HealthRegenRate, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, ManaRegen, OldValue);
 
-	OnHealthRegenRateChanged.Broadcast(nullptr, nullptr, nullptr, GetHealthRegenRate() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetHealthRegenRate());
+	OnManaRegenChanged.Broadcast(nullptr, nullptr, nullptr, GetManaRegen() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetManaRegen());
+}
+
+void UGGUtilitySet::OnRep_ManaRegenPercent(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, ManaRegenPercent, OldValue);
+
+	OnManaRegenPercentChanged.Broadcast(nullptr, nullptr, nullptr, GetManaRegenPercent() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetManaRegenPercent());
+}
+
+void UGGUtilitySet::OnRep_HealthRegen(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, HealthRegen, OldValue);
+
+	OnHealthRegenChanged.Broadcast(nullptr, nullptr, nullptr, GetHealthRegen() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetHealthRegen());
+}
+
+void UGGUtilitySet::OnRep_HealthRegenPercent(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, HealthRegenPercent, OldValue);
+
+	OnHealthRegenPercentChanged.Broadcast(nullptr, nullptr, nullptr, GetHealthRegenPercent() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetHealthRegenPercent());
 }
 
 void UGGUtilitySet::OnRep_MoveSpeed(const FGameplayAttributeData& OldValue)
@@ -95,4 +122,12 @@ void UGGUtilitySet::PreAttributeChange(const FGameplayAttribute& Attribute, floa
 
 void UGGUtilitySet::ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const
 {
+	if (Attribute == GetMoveSpeedAttribute())
+	{
+		NewValue = FMath::Max(NewValue, 0.0f);
+	}
+	else if (Attribute == GetPhysicalDamageAbsorptionAttribute() || Attribute == GetMagicDamageAbsorptionAttribute())
+	{
+		NewValue = FMath::Max(NewValue, 0.0f);
+	}
 }

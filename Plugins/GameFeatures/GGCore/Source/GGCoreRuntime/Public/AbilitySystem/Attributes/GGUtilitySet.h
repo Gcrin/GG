@@ -18,17 +18,23 @@ public:
 
 	UGGUtilitySet();
 
-	ATTRIBUTE_ACCESSORS(UGGUtilitySet, StaminaRegenRate);
-	ATTRIBUTE_ACCESSORS(UGGUtilitySet, ManaRegenRate);
-	ATTRIBUTE_ACCESSORS(UGGUtilitySet, HealthRegenRate);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, StaminaRegen);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, StaminaRegenPercent);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, ManaRegen);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, ManaRegenPercent);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, HealthRegen);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, HealthRegenPercent);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MoveSpeed);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, CooldownReduction);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, PhysicalDamageAbsorption);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MagicDamageAbsorption);
 
-	mutable FLyraAttributeEvent OnStaminaRegenRateChanged;
-	mutable FLyraAttributeEvent OnManaRegenRateChanged;
-	mutable FLyraAttributeEvent OnHealthRegenRateChanged;
+	mutable FLyraAttributeEvent OnStaminaRegenChanged;
+	mutable FLyraAttributeEvent OnStaminaRegenPercentChanged;
+	mutable FLyraAttributeEvent OnManaRegenChanged;
+	mutable FLyraAttributeEvent OnManaRegenPercentChanged;
+	mutable FLyraAttributeEvent OnHealthRegenChanged;
+	mutable FLyraAttributeEvent OnHealthRegenPercentChanged;
 	mutable FLyraAttributeEvent OnMoveSpeedChanged;
 	mutable FLyraAttributeEvent OnCooldownReductionChanged;
 	mutable FLyraAttributeEvent OnPhysicalDamageAbsorptionChanged;
@@ -37,13 +43,22 @@ public:
 protected:
 
 	UFUNCTION()
-	virtual void OnRep_StaminaRegenRate(const FGameplayAttributeData& OldValue);
+	virtual void OnRep_StaminaRegen(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	virtual void OnRep_ManaRegenRate(const FGameplayAttributeData& OldValue);
+	virtual void OnRep_StaminaRegenPercent(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	virtual void OnRep_HealthRegenRate(const FGameplayAttributeData& OldValue);
+	virtual void OnRep_ManaRegen(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_ManaRegenPercent(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_HealthRegen(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_HealthRegenPercent(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
 	virtual void OnRep_MoveSpeed(const FGameplayAttributeData& OldValue);
@@ -64,31 +79,43 @@ protected:
 
 private:
 
-	// 초당 기력 회복 속도
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegenRate, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData StaminaRegenRate;
+	// n초당 기력 회복 (수치)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaminaRegen;
 
-	// 초당 마력 회복 속도
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegenRate, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData ManaRegenRate;
+	// n초당 기력 회복 (%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaminaRegenPercent;
 
-	// 초당 체력 회복 속도
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegenRate, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData HealthRegenRate;
+	// n초당 마력 회복 (수치)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaRegen;
 
-	// 이동 속도
+	// n초당 마력 회복 (%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaRegenPercent;
+
+	// n초당 체력 회복 (수치)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegen, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData HealthRegen;
+
+	// n초당 체력 회복 (%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegenPercent, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData HealthRegenPercent;
+
+	// 이동 속도 (수치, 최소 0.0f)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MoveSpeed, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MoveSpeed;
 
-	// 스킬 쿨타임 감소 (예: 10.0 = 10% 감소)
+	// 스킬 쿨타임 감소 (예: 0.1 = 10% 감소)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CooldownReduction, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CooldownReduction;
 
-	// 물리 피해 흡수 (준 물리 피해의 일부를 체력으로 전환, 예: 5.0 = 5% 흡수)
+	// 물리 피해 흡수 (준 물리 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageAbsorption;
 
-	// 마법 피해 흡수 (준 마법 피해의 일부를 체력으로 전환, 예: 5.0 = 5% 흡수)
+	// 마법 피해 흡수 (준 마법 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAbsorption, Category = "GG|Utility", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageAbsorption;
 };

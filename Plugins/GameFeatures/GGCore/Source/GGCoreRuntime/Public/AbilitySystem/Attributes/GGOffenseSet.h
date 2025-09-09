@@ -69,19 +69,19 @@ protected:
 
 private:
 
-	// 치명타 확률 (예: 5.0 = 5%, 0% ~ 100%)
+	// 치명타 확률 (예: 0.05 = 5%, 0% ~ 100%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CritChance;
 
-	// 치명타 피해량 (예: 150.0 = 150%)
+	// 치명타 피해량 (예: 2.0 = 200%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritDamage, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CritDamage;
 
-	// 물리 피해 증폭 (예: 10.0 = 10%)
+	// 물리 피해 증폭 (예: 0.1 = 10%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageAmp;
 
-	// 마법 피해 증폭 (예: 10.0 = 10%)
+	// 마법 피해 증폭 (예: 0.1 = 10%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDamageAmp;
 

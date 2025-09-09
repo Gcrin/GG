@@ -60,6 +60,10 @@ void UGGDefenseSet::ClampAttribute(const FGameplayAttribute& Attribute, float& N
 {
 	if (Attribute == GetPhysicalDamageReductionAttribute() || Attribute == GetMagicDamageReductionAttribute())
 	{
-		NewValue = FMath::Min(NewValue, 85.0f);
+		NewValue = FMath::Min(NewValue, 0.85f);
+	}
+	else if (Attribute == GetFlatDamageReductionAttribute())
+	{
+		NewValue = FMath::Max(NewValue, 0.0f);
 	}
 }
