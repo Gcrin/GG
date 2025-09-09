@@ -8,8 +8,7 @@
 UGGDefenseSet::UGGDefenseSet()
 	: PhysicalDamageReduction(0.0f)
 	, MagicDamageReduction(0.0f)
-	, PhysicalDamageAbsorption(0.0f)
-	, MagicDamageAbsorption(0.0f)
+	, FlatDamageReduction(0.0f)
 {
 }
 
@@ -19,8 +18,7 @@ void UGGDefenseSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, PhysicalDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, MagicDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, PhysicalDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, MagicDamageAbsorption, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, FlatDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
 }
 
 void UGGDefenseSet::OnRep_PhysicalDamageReduction(const FGameplayAttributeData& OldValue)
@@ -37,16 +35,31 @@ void UGGDefenseSet::OnRep_MagicDamageReduction(const FGameplayAttributeData& Old
 	OnMagicDamageReductionChanged.Broadcast(nullptr, nullptr, nullptr, GetMagicDamageReduction() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMagicDamageReduction());
 }
 
-void UGGDefenseSet::OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue)
+void UGGDefenseSet::OnRep_FlatDamageReduction(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGDefenseSet, PhysicalDamageAbsorption, OldValue);
-	
-	OnPhysicalDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetPhysicalDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetPhysicalDamageAbsorption());
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGDefenseSet, FlatDamageReduction, OldValue);
+
+	OnFlatDamageReductionChanged.Broadcast(nullptr, nullptr, nullptr, GetFlatDamageReduction() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetFlatDamageReduction());
 }
 
-void UGGDefenseSet::OnRep_MagicDamageAbsorption(const FGameplayAttributeData& OldValue)
+void UGGDefenseSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGDefenseSet, MagicDamageAbsorption, OldValue);
+	Super::PreAttributeBaseChange(Attribute, NewValue);
 	
-	OnMagicDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetMagicDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMagicDamageAbsorption());
+	ClampAttribute(Attribute, NewValue);
+}
+
+void UGGDefenseSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	
+	ClampAttribute(Attribute, NewValue);
+}
+
+void UGGDefenseSet::ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	if (Attribute == GetPhysicalDamageReductionAttribute() || Attribute == GetMagicDamageReductionAttribute())
+	{
+		NewValue = FMath::Min(NewValue, 85.0f);
+	}
 }

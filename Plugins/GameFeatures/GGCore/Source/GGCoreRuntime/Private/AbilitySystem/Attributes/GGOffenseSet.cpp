@@ -6,8 +6,8 @@
 #include "Net/UnrealNetwork.h"
 
 UGGOffenseSet::UGGOffenseSet()
-	: CritChance(5.0f)
-	, CritDamage(150.0f)
+	: CritChance(0.0f)
+	, CritDamage(200.0f)
 	, PhysicalDamageAmp(0.0f)
 	, MagicDamageAmp(0.0f)
 	, AttackSpeed(1.0f)
