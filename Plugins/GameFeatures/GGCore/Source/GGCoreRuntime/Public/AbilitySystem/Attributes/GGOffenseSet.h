@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/LyraAttributeSet.h"
 #include "GGOffenseSet.generated.h"
 
@@ -18,4 +19,81 @@ public:
 
 	UGGOffenseSet();
 	
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, CritChance);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, CritDamage);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, PhysicalDamageAmp);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, MagicDamageAmp);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, AttackSpeed);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, PhysicalPenetration);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, MagicPenetration);
+	ATTRIBUTE_ACCESSORS(UGGOffenseSet, CastSpeed);
+
+	mutable FLyraAttributeEvent OnCritChanceChanged;
+	mutable FLyraAttributeEvent OnCritDamageChanged;
+	mutable FLyraAttributeEvent OnPhysicalDamageAmpChanged;
+	mutable FLyraAttributeEvent OnMagicDamageAmpChanged;
+	mutable FLyraAttributeEvent OnAttackSpeedChanged;
+	mutable FLyraAttributeEvent OnPhysicalPenetrationChanged;
+	mutable FLyraAttributeEvent OnMagicPenetrationChanged;
+	mutable FLyraAttributeEvent OnCastSpeedChanged;
+
+protected:
+
+	UFUNCTION()
+	virtual void OnRep_CritChance(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_CritDamage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_PhysicalDamageAmp(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_MagicDamageAmp(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
+	virtual void OnRep_AttackSpeed(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_PhysicalPenetration(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_MagicPenetration(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	virtual void OnRep_CastSpeed(const FGameplayAttributeData& OldValue);
+
+private:
+
+	// 치명타 확률 (예: 5.0 = 5%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CritChance;
+
+	// 치명타 피해량 (예: 150.0 = 150%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritDamage, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CritDamage;
+
+	// 물리 피해 증폭 (예: 10.0 = 10%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData PhysicalDamageAmp;
+
+	// 마법 피해 증폭 (예: 10.0 = 10%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAmp, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MagicDamageAmp;
+
+	// 공격 속도 (예: 1.0 = 100%, 1.2 = 120%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AttackSpeed;
+
+	// 물리 관통력 (수치 또는 %)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData PhysicalPenetration;
+
+	// 마법 관통력 (수치 또는 %)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicPenetration, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MagicPenetration;
+
+	// 시전 속도 (예: 1.0 = 100%, 1.2 = 120%)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "GG|Offense", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CastSpeed;
 };
