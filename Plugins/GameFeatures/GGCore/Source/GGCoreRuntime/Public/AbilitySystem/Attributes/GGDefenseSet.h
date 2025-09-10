@@ -42,7 +42,7 @@ protected:
 
 	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
 
-private:
+public:
 
 	// 물리 피해 감소 (예: 0.1 = 10% 감소)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageReduction, Category = "GG|Defense", Meta = (DisplayName = "물리 피해 감소", AllowPrivateAccess = true))
