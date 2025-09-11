@@ -36,11 +36,16 @@ public:
 
 	/**
 	 * 이 스킬의 비용을 정의하는 GameplayEffect 클래스입니다.
-	 * 범용 비용 GE(예: GE_Cost_Mana_Generic)를 여기에 지정합니다.
 	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GG|Resource", meta=(DisplayName="비용 게임플레이 이펙트"))
 	TSubclassOf<UGameplayEffect> CostGameplayEffect;
 
+	/**
+	 * CostGameplayEffect에 주입할 태그와 비용 수치입니다.
+	 * 이 값은 SetByCaller를 통해 GE의 Magnitude로 설정됩니다.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FGameplayTag, float> ResourceCosts;
 	/**
 	 * CostGameplayEffect에 주입할 실제 비용 수치입니다.
 	 * 이 값은 SetByCaller를 통해 GE의 Magnitude로 설정됩니다.

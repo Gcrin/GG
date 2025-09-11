@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemGlobals.h"
+#include "GGGameplayTags.h"
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/GGSkillDataBase.h"
 
@@ -43,49 +44,50 @@ void UGGSkillAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, con
                                     const FGameplayAbilityActivationInfo ActivationInfo) const
 {
 	UGameplayEffect* CooldownGE = GetCooldownGameplayEffect();
-	if (CooldownGE)
+	if (!CooldownGE)
 	{
-		check(SkillData);
-		const float CooldownDuration = SkillData->CooldownDuration;
-
-		FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(CooldownGE->GetClass(), GetAbilityLevel());
-		if (SpecHandle.IsValid())
-		{
-			// SetByCaller를 통해 쿨다운 '수치'를 Spec에 주입합니다.
-			// "Cooldown.Value" 태그는 범용 쿨다운 GE에 미리 설정해두어야 합니다.
-			SpecHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(TEXT("Cooldown.Value")), CooldownDuration);
-
-			ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);
-		}
+		return;
 	}
-	Super::ApplyCooldown(Handle, ActorInfo, ActivationInfo);
+
+	FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(CooldownGE->GetClass(), GetAbilityLevel());
+	if (!SpecHandle.IsValid())
+	{
+		return;
+	}
+
+	const FGameplayTagContainer* CooldownTags = GetCooldownTags();
+	if (CooldownTags)
+	{
+		SpecHandle.Data->DynamicGrantedTags.AppendTags(*CooldownTags);
+	}
+
+	ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);
 }
 
-bool UGGSkillAbility::CheckCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                    FGameplayTagContainer* OptionalRelevantTags) const
+UGameplayEffect* UGGSkillAbility::GetCooldownGameplayEffect() const
 {
-	return Super::CheckCooldown(Handle, ActorInfo, OptionalRelevantTags);
+	if (SkillData && SkillData->CooldownGameplayEffect)
+	{
+		return SkillData->CooldownGameplayEffect->GetDefaultObject<UGameplayEffect>();
+	}
+	return Super::GetCooldownGameplayEffect();
 }
 
 const FGameplayTagContainer* UGGSkillAbility::GetCooldownTags() const
 {
+	if (SkillData && SkillData->CooldownTags.Num() > 0)
+	{
+		return &SkillData->CooldownTags;
+	}
 	return Super::GetCooldownTags();
-}
-
-void UGGSkillAbility::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                const FGameplayAbilityActivationInfo ActivationInfo) const
-{
-	Super::ApplyCost(Handle, ActorInfo, ActivationInfo);
-}
-
-bool UGGSkillAbility::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                FGameplayTagContainer* OptionalRelevantTags) const
-{
-	return Super::CheckCost(Handle, ActorInfo, OptionalRelevantTags);
 }
 
 UGameplayEffect* UGGSkillAbility::GetCostGameplayEffect() const
 {
+	if (SkillData && SkillData->CostGameplayEffect)
+	{
+		return SkillData->CostGameplayEffect->GetDefaultObject<UGameplayEffect>();
+	}
 	return Super::GetCostGameplayEffect();
 }
 

@@ -10,4 +10,8 @@ namespace GGGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Type_Magic);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_SkillDamage);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_SkillDamage_Multiplier);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Cooldown_Duration);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Mana);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Stamina);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Health);
 };
