@@ -67,7 +67,7 @@ protected:
 
 	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
 
-private:
+public:
 
 	// 치명타 확률 (예: 0.05 = 5%, 0% ~ 100%)
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "GG|Offense", Meta = (DisplayName = "치명타 확률", AllowPrivateAccess = true))
