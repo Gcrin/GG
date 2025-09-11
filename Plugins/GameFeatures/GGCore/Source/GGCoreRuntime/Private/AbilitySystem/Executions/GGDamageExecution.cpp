@@ -134,7 +134,7 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 		DamageReduction = MagicDamageReduction;
 		Penetration = MagicPenetration;
 	}
-	
+
 	// 계산
 	float FinalDamage = 0.f;
 	float ApplyCritMultiplier = 1.f;
@@ -144,12 +144,19 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 		ApplyCritMultiplier = CritDamage;
 	}
 
+	if (DamageReduction < 0.f)
+	{
+		Penetration = 0.f;
+	}
+
 	// 데미지 = (((기본데미지 + 스킬데미지) * 스킬배율 * 치피배율) * (1 + 뎀증율) * (1-피감율)) - 고정피해감소수치
-	FinalDamage = (((RealBaseDamage + SkillDamage) * SkillDamageMultiplier * ApplyCritMultiplier) * (1.f + DamageAmp) * (1.f - (DamageReduction * (1.f-Penetration)))) - FlatDamageReduction;
+	FinalDamage = (((RealBaseDamage + SkillDamage) * SkillDamageMultiplier * ApplyCritMultiplier)
+		* (1.f + DamageAmp) * (1.f - (DamageReduction * (1.f - Penetration)))) - FlatDamageReduction;
 
 	// 최종 반환
 	FinalDamage = FMath::Max(0.f, FinalDamage);
-	OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, FinalDamage));
+	OutExecutionOutput.AddOutputModifier(
+		FGameplayModifierEvaluatedData(ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, FinalDamage));
 
 #endif
 }
