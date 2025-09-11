@@ -5,8 +5,8 @@
 
 namespace GGGameplayTags
 {
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Data_Damage_Physical, "Data.Damage.Physical", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Data_Damage_Magic, "Data.Damage.Magic", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_SkillDamage, "Ability.SkillDamage", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_SkillDamage_Multiplier, "Ability.SkillDamage.Multiplier", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Type_Physical, "Damage.Type.Physical", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Type_Magic, "Damage.Type.Magic", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_SkillDamage, "SetByCaller.SkillDamage", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_SkillDamage_Multiplier, "SetByCaller.SkillDamage.Multiplier", "");
 }

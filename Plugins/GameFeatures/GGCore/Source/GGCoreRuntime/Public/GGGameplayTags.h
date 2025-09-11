@@ -6,8 +6,8 @@
 
 namespace GGGameplayTags
 {
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage_Physical);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage_Magic);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_SkillDamage);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_SkillDamage_Multiplier);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Type_Physical);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Type_Magic);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_SkillDamage);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_SkillDamage_Multiplier);
 };
