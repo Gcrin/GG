@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class GGCORERUNTIME_API UGGEquipmentInstance : public UObject
 {
 	GENERATED_BODY()
