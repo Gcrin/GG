@@ -44,14 +44,9 @@ public:
 	 * CostGameplayEffect에 주입할 태그와 비용 수치입니다.
 	 * 이 값은 SetByCaller를 통해 GE의 Magnitude로 설정됩니다.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GG|Resource",
+		meta=(DisplayName="리소스 비용", Categories = "SetByCaller.Resource", ForceInlineRow))
 	TMap<FGameplayTag, float> ResourceCosts;
-	/**
-	 * CostGameplayEffect에 주입할 실제 비용 수치입니다.
-	 * 이 값은 SetByCaller를 통해 GE의 Magnitude로 설정됩니다.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GG|Resource", meta=(DisplayName="리소스 비용"))
-	float ResourceCost = 0.0f;
 
 	/**
 	 * 이 스킬의 쿨다운을 정의하는 GameplayEffect 클래스입니다.

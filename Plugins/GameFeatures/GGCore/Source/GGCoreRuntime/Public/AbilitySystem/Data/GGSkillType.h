@@ -29,15 +29,14 @@ struct FSkillEffectData
 	 * @brief EffectClass에 SetByCaller 방식으로 전달할 데이터 맵입니다.
 	 * 
 	 * 태그를 키로 사용하여 동적인 수치(데미지, 치유량, 지속시간 등)를 GameplayEffect에 주입할 수 있습니다.
-	 * 예: ("Data.Damage", 50.0), ("Data.Duration", 3.0)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayEffect", meta = (ForceInlineRow, DisplayName="SetByCaller 수치 (SetByCallerMagnitudes)"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayEffect", meta = (ForceInlineRow,
+		DisplayName="SetByCaller 수치 (SetByCallerMagnitudes)", Categories = "SetByCaller"))
 	TMap<FGameplayTag, float> SetByCallerMagnitudes;
 
 	/**
 	 * @brief 이 효과가 스킬 생명주기의 어느 시점에 적용될지 결정하는 조건입니다.
 	 * 여러 조건을 체크하면, 해당하는 모든 시점에서 이 효과가 적용될 수 있습니다.
-	 * 예: 'OnSuccessfulEnd'와 'OnCancelled'를 모두 체크하면 스킬 종료 시 항상 적용됩니다.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Conditions",
 		meta = (Bitmask, BitmaskEnum = "/Script/GGCoreRuntime.ESkillEffectApplyCondition", DisplayName="생명주기 조건"))

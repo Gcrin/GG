@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/ModMagnitudeCalculation/GGMMC_SkillCost.h"
+#include "AbilitySystem/ModMagnitudeCalculation/GGMMC_SkillCostBase.h"
 
 #include "AbilitySystem/Abilities/GGSkillAbility.h"
 
-float UGGMMC_SkillCost::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UGGMMC_SkillCostBase::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
 	const UGGSkillAbility* SkillAbility = Cast<UGGSkillAbility>(Spec.GetContext().GetAbilityInstance_NotReplicated());
 	if (!SkillAbility || !SkillAbility->GetSkillData())
