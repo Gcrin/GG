@@ -15,12 +15,12 @@ struct FGGAbilityUIUpdateMessage
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<AActor> Owner = nullptr;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<UGGSkillAbility> SkillAbility;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	FGameplayTag InputTag;
 };
