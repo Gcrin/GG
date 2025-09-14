@@ -10,6 +10,7 @@
 /* forward declarations */
 class UGGInventoryItemInstance;
 class UGGInventoryItemDefinition;
+class UGGEquipmentManagerComponent;
 
 /* Inventory Item 단위 객체 */
 USTRUCT(BlueprintType)
@@ -51,4 +52,21 @@ public:
 	
 	UPROPERTY()
 	FGGInventoryList InventoryList;
+
+	/*// 외부에 공개할 장착/해제 함수들을 선언
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void EquipItemByIndex(int32 ItemIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UnequipCurrentItem();*/
+
+protected:
+	// 게임 시작시 초기화 용
+	virtual void BeginPlay() override;
+
+private:
+	// EquipmentComponent를 저장해 둘 포인터 변수
+	UPROPERTY()
+	TObjectPtr<UGGEquipmentManagerComponent> CachedEquipmentComponent;
+
 };

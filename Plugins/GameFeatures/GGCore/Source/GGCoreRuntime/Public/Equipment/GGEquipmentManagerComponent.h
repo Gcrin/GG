@@ -6,8 +6,8 @@
 #include "Components/PawnComponent.h"
 #include "GGEquipmentManagerComponent.generated.h"
 
-class UHakEquipmentDefinition;
-class UHakEquipmentInstance;
+class UGGEquipmentDefinition;
+class UGGEquipmentInstance;
 
 USTRUCT(BlueprintType)
 struct FGGAppliedEquipmentEntry
@@ -16,11 +16,11 @@ struct FGGAppliedEquipmentEntry
 	
 	/** 장착물에 대한 메다 데이터 */
 	UPROPERTY()
-	TSubclassOf<UHakEquipmentDefinition> EquipmentDefinition;
+	TSubclassOf<UGGEquipmentDefinition> EquipmentDefinition;
 	
 	/* EquipmentDefinition을 통해 생성되는 인스턴스 */
 	UPROPERTY()
-	TObjectPtr<UHakEquipmentInstance> Instance = nullptr;
+	TObjectPtr<UGGEquipmentInstance> Instance = nullptr;
 };
 
 /*
@@ -47,7 +47,7 @@ struct FGGEquipmentList
 * Pawn의 Component로써 장착물에 대한 관리를 담당
 */
 UCLASS()
-class HAKGAME_API UGGEquipmentManagerComponent : public UPawnComponent
+class GGCORERUNTIME_API UGGEquipmentManagerComponent : public UPawnComponent
 {
 	GENERATED_BODY()
 
