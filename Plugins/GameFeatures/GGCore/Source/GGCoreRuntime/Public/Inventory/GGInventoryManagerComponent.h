@@ -31,6 +31,8 @@ struct FGGInventoryList
 	FGGInventoryList(UActorComponent* InOwnerComponent = nullptr)
 		: OwnerComponent(InOwnerComponent)
 	{}
+
+	UGGInventoryItemInstance* AddEntry(TSubclassOf<UGGInventoryItemDefinition> ItemDef);
 	
 	UPROPERTY()
 	TArray<FGGInventoryEntry> Entries;
@@ -49,6 +51,9 @@ class GGCORERUNTIME_API UGGInventoryManagerComponent : public UActorComponent
 	
 public:
 	UGGInventoryManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	UGGInventoryItemInstance* AddItemDefinition(TSubclassOf<UGGInventoryItemDefinition> ItemDef);
 	
 	UPROPERTY()
 	FGGInventoryList InventoryList;
