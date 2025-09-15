@@ -10,5 +10,10 @@ UCLASS()
 class UGGInventoryFragment_EquippableItem : public UGGInventoryItemFragment
 {
 	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, Category = GG)
+	TSubclassOf<UGGEquipmentDefinition> EquipmentDefinition;
 	
 };
