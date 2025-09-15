@@ -16,9 +16,9 @@ void UGGDefenseSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, PhysicalDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, MagicDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, FlatDamageReduction, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, PhysicalDamageReduction, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, MagicDamageReduction, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGDefenseSet, FlatDamageReduction, COND_None, REPNOTIFY_Always);
 }
 
 void UGGDefenseSet::OnRep_PhysicalDamageReduction(const FGameplayAttributeData& OldValue)
