@@ -24,6 +24,8 @@ class GGCORERUNTIME_API UGGInventoryItemDefinition : public UObject
 
 public:
 	UGGInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	const UGGInventoryItemFragment* FindFragmentByClass(TSubclassOf<UGGInventoryItemFragment> FragmentClass) const;
 	
 	/* Inventory Item 정의(메타) 이름 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display)
