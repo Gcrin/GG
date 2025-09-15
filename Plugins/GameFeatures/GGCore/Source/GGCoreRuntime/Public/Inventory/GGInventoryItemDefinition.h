@@ -17,7 +17,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class GGCORERUNTIME_API UGGInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()

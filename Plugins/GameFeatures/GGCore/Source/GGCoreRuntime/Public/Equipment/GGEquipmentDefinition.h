@@ -29,7 +29,7 @@ struct FGGEquipmentActorToSpawn
 /*
 * GGEquipmentDefinition은 장착 아이템에 대한 정의 클래스(메타 데이터)
 */
-UCLASS()
+UCLASS(Blueprintable)
 class GGCORERUNTIME_API UGGEquipmentDefinition : public UObject
 {
 	GENERATED_BODY()
