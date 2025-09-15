@@ -7,6 +7,7 @@
 #include "GGInventoryItemInstance.generated.h"
 
 class UGGInventoryItemDefinition;
+class UGGInventoryItemFragment;
 
 /**
  * 
@@ -18,6 +19,14 @@ class GGCORERUNTIME_API UGGInventoryItemInstance : public UObject
 
 public:
 	UGGInventoryItemInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	const UGGInventoryItemFragment* FindFragmentByClass(TSubclassOf<UGGInventoryItemFragment> FragmentClass) const;
+	
+	template <typename ResultClass>
+	const ResultClass* FindFragmentByClass() const
+	{
+		return (ResultClass*)FindFragmentByClass(ResultClass::StaticClass());
+	}
 
 	// Inventory Item의 정의, 실제 객체가 아니라 '설계도'나 '타입' 정보를 담음
 	UPROPERTY()
