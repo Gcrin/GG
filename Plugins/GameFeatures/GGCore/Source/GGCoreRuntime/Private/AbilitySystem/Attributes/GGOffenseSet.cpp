@@ -23,13 +23,12 @@ void UGGOffenseSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, CastSpeed, COND_None, REPNOTIFY_Always);
-
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, CritChance, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, CritDamage, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, PhysicalDamageAmp, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, MagicDamageAmp, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, PhysicalPenetration, COND_OwnerOnly, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, MagicPenetration, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, CritChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, CritDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, PhysicalDamageAmp, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, MagicDamageAmp, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, PhysicalPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGOffenseSet, MagicPenetration, COND_None, REPNOTIFY_Always);
 }
 
 void UGGOffenseSet::OnRep_CritChance(const FGameplayAttributeData& OldValue)
