@@ -20,6 +20,7 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UGGShieldSet, Shield);
 	ATTRIBUTE_ACCESSORS(UGGShieldSet, MaxShield);
+	ATTRIBUTE_ACCESSORS(UGGShieldSet, ShieldDamage);
 	
 	mutable FLyraAttributeEvent OnShieldChanged;
 	mutable FLyraAttributeEvent OnMaxShieldChanged;
@@ -35,7 +36,6 @@ protected:
 	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
-	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
@@ -48,5 +48,11 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxShield, Category = "GG|Shield", Meta = (DisplayName = "보호막", AllowPrivateAccess = true))
 	FGameplayAttributeData MaxShield;
+	
+	float ShieldBeforeAttributeChange;
+	float MaxShieldBeforeAttributeChange;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Shield", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ShieldDamage;
 	
 };
