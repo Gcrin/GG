@@ -9,6 +9,7 @@
 #include "AbilitySystem/Attributes/LyraHealthSet.h"
 #include "GGGameplayTags.h"
 #include "GameplayEffect.h"
+#include "AbilitySystem/Attributes/GGShieldSet.h"
 
 struct FDamageStatics
 {
@@ -23,6 +24,7 @@ struct FDamageStatics
 	FGameplayEffectAttributeCaptureDefinition PhysicalDamageReductionDef;
 	FGameplayEffectAttributeCaptureDefinition MagicDamageReductionDef;
 	FGameplayEffectAttributeCaptureDefinition FlatDamageReductionDef;
+	FGameplayEffectAttributeCaptureDefinition ShieldDef;
 
 	FDamageStatics()
 	{
@@ -47,6 +49,8 @@ struct FDamageStatics
 			UGGDefenseSet::GetMagicDamageReductionAttribute(), EGameplayEffectAttributeCaptureSource::Target, true);
 		FlatDamageReductionDef = FGameplayEffectAttributeCaptureDefinition(
 			UGGDefenseSet::GetFlatDamageReductionAttribute(), EGameplayEffectAttributeCaptureSource::Target, true);
+		ShieldDef = FGameplayEffectAttributeCaptureDefinition(
+				UGGShieldSet::GetShieldAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
 };
 
@@ -69,6 +73,7 @@ UGGDamageExecution::UGGDamageExecution()
 	RelevantAttributesToCapture.Add(DamageStatics().PhysicalDamageReductionDef);
 	RelevantAttributesToCapture.Add(DamageStatics().MagicDamageReductionDef);
 	RelevantAttributesToCapture.Add(DamageStatics().FlatDamageReductionDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ShieldDef);
 }
 
 void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -109,6 +114,9 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 	float FlatDamageReduction = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(
 		DamageStatics().FlatDamageReductionDef, FAggregatorEvaluateParameters(), FlatDamageReduction);
+	float TargetShield = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(
+		DamageStatics().ShieldDef, FAggregatorEvaluateParameters(), TargetShield);
 
 	const float SkillDamage = Spec.GetSetByCallerMagnitude(
 		GGGameplayTags::SetByCaller_SkillDamage, false, 0.f);
@@ -153,7 +161,18 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 	FinalDamage = (((RealBaseDamage + SkillDamage) * SkillDamageMultiplier * ApplyCritMultiplier)
 		* (1.f + DamageAmp) * (1.f - (DamageReduction * (1.f - Penetration)))) - FlatDamageReduction;
 
-	// 최종 반환
+	if (TargetShield > 0.f)
+	{
+		const float DamageToShield = FMath::Min(FinalDamage, TargetShield);
+		const float DamageToHealth = FinalDamage - DamageToShield;
+
+		// 최종 반환 : Shield
+		FinalDamage = FMath::Max(0.f, DamageToHealth);
+		OutExecutionOutput.AddOutputModifier(
+			FGameplayModifierEvaluatedData(UGGShieldSet::GetShieldDamageAttribute(), EGameplayModOp::Override, -DamageToShield));
+	}
+	
+	// 최종 반환 : Health
 	FinalDamage = FMath::Max(0.f, FinalDamage);
 	OutExecutionOutput.AddOutputModifier(
 		FGameplayModifierEvaluatedData(ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, FinalDamage));
