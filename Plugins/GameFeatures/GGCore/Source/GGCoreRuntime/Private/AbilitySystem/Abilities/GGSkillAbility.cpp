@@ -55,6 +55,11 @@ void UGGSkillAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, con
 		SpecHandle.Data->DynamicGrantedTags.AppendTags(*CooldownTags);
 	}
 
+	SpecHandle.Data->SetSetByCallerMagnitude(
+		GGGameplayTags::SetByCaller_Cooldown_Duration,
+		SkillData->CooldownDuration
+	);
+
 	ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);
 }
 

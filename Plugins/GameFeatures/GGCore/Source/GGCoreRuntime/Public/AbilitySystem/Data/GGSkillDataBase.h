@@ -66,7 +66,7 @@ public:
 	 * 이 값은 SetByCaller를 통해 GE의 지속시간으로 설정됩니다.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GG|Resource", meta=(DisplayName="재사용 대기시간"))
-	float CooldownDuration = 1.0f;
+	float CooldownDuration = 0.0f;
 
 
 	// === 시전 ===
