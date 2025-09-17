@@ -14,8 +14,8 @@ UGGUtilitySet::UGGUtilitySet()
 	, HealthRegenPercent(0.0f)
 	, MoveSpeed(600.0f)
 	, CooldownReduction(0.0f)
-	, PhysicalDamageAbsorption(0.0f)
-	, MagicDamageAbsorption(0.0f)
+	, PhysicalLifeSteal(0.0f)
+	, MagicLifeSteal(0.0f)
 {
 }
 
@@ -31,8 +31,8 @@ void UGGUtilitySet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegen, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, HealthRegenPercent, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, CooldownReduction, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, PhysicalDamageAbsorption, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, MagicDamageAbsorption, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, PhysicalLifeSteal, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UGGUtilitySet, MagicLifeSteal, COND_None, REPNOTIFY_Always);
 }
 
 void UGGUtilitySet::OnRep_StaminaRegen(const FGameplayAttributeData& OldValue)
@@ -91,18 +91,18 @@ void UGGUtilitySet::OnRep_CooldownReduction(const FGameplayAttributeData& OldVal
 	OnCooldownReductionChanged.Broadcast(nullptr, nullptr, nullptr, GetCooldownReduction() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetCooldownReduction());
 }
 
-void UGGUtilitySet::OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue)
+void UGGUtilitySet::OnRep_PhysicalLifeSteal(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, PhysicalDamageAbsorption, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, PhysicalLifeSteal, OldValue);
 
-	OnPhysicalDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetPhysicalDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetPhysicalDamageAbsorption());
+	OnPhysicalLifeStealChanged.Broadcast(nullptr, nullptr, nullptr, GetPhysicalLifeSteal() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetPhysicalLifeSteal());
 }
 
-void UGGUtilitySet::OnRep_MagicDamageAbsorption(const FGameplayAttributeData& OldValue)
+void UGGUtilitySet::OnRep_MagicLifeSteal(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MagicDamageAbsorption, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGGUtilitySet, MagicLifeSteal, OldValue);
 
-	OnMagicDamageAbsorptionChanged.Broadcast(nullptr, nullptr, nullptr, GetMagicDamageAbsorption() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMagicDamageAbsorption());
+	OnMagicLifeStealChanged.Broadcast(nullptr, nullptr, nullptr, GetMagicLifeSteal() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMagicLifeSteal());
 }
 
 void UGGUtilitySet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -125,7 +125,7 @@ void UGGUtilitySet::ClampAttribute(const FGameplayAttribute& Attribute, float& N
 	{
 		NewValue = FMath::Max(NewValue, 0.0f);
 	}
-	else if (Attribute == GetPhysicalDamageAbsorptionAttribute() || Attribute == GetMagicDamageAbsorptionAttribute())
+	else if (Attribute == GetPhysicalLifeStealAttribute() || Attribute == GetMagicLifeStealAttribute())
 	{
 		NewValue = FMath::Max(NewValue, 0.0f);
 	}
