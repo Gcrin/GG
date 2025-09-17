@@ -183,14 +183,14 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 
 		// 보호막에 가해질 데미지 적용
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(
-			UGGShieldSet::GetShieldDamageAttribute(), EGameplayModOp::Override, DamageToShield));
+			UGGShieldSet::GetShieldDamageAttribute(), EGameplayModOp::Additive, DamageToShield));
 	}
 
 	// 체력에 가해질 데미지 적용
 	if (DamageToHealth > 0.f)
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(
-			ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, DamageToHealth));
+			ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Additive, DamageToHealth));
 	}
 
 #endif

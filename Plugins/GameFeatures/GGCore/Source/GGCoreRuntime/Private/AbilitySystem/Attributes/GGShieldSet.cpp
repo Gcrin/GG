@@ -53,6 +53,11 @@ void UGGShieldSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackDat
 		SetShield(FMath::Max(0.0f, GetShield() - GetShieldDamage()));
 		SetShieldDamage(0.0f);
 	}
+	else if (Data.EvaluatedData.Attribute == GetShieldHealingAttribute())
+	{
+		SetShield(FMath::Max(0.0f, GetShield() + GetShieldHealing()));
+		SetShieldHealing(0.0f);
+	}
 	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
 	{
 		SetShield(FMath::Max(0.0f, GetShield()));
