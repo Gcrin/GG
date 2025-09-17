@@ -14,12 +14,6 @@ void UGGSkillAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                       const FGameplayAbilityActivationInfo ActivationInfo,
                                       const FGameplayEventData* TriggerEventData)
 {
-	ensure(SkillData != nullptr);
-	if (!SkillData)
-	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
-		return;
-	}
 	ApplyEffectsByCondition(ESkillEffectApplyCondition::OnActivate);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
