@@ -32,4 +32,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<const class UGGUtilitySet> UtilitySet;
 
+	UPROPERTY()
+	TObjectPtr<const class UGGShieldSet> ShieldSet;
+
 };
