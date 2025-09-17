@@ -19,19 +19,15 @@ public:
 	UGGShieldSet();
 
 	ATTRIBUTE_ACCESSORS(UGGShieldSet, Shield);
-	ATTRIBUTE_ACCESSORS(UGGShieldSet, MaxShield);
 	ATTRIBUTE_ACCESSORS(UGGShieldSet, ShieldDamage);
+	ATTRIBUTE_ACCESSORS(UGGShieldSet, ShieldHealing);
 	
 	mutable FLyraAttributeEvent OnShieldChanged;
-	mutable FLyraAttributeEvent OnMaxShieldChanged;
 
 protected:
 
 	UFUNCTION()
 	virtual void OnRep_Shield(const FGameplayAttributeData& OldValue);
-
-	UFUNCTION()
-	virtual void OnRep_MaxShield(const FGameplayAttributeData& OldValue);
 
 	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
@@ -46,13 +42,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Shield, Category = "GG|Shield", Meta = (DisplayName = "보호막", AllowPrivateAccess = true))
 	FGameplayAttributeData Shield;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxShield, Category = "GG|Shield", Meta = (DisplayName = "보호막", AllowPrivateAccess = true))
-	FGameplayAttributeData MaxShield;
-	
 	float ShieldBeforeAttributeChange;
-	float MaxShieldBeforeAttributeChange;
 
 	UPROPERTY(BlueprintReadOnly, Category = "GG|Shield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ShieldDamage;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "GG|Shield", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ShieldHealing;
 	
 };
