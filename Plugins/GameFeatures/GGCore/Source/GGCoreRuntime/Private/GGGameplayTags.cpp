@@ -13,4 +13,8 @@ namespace GGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Resource_Mana, "SetByCaller.Resource.Mana", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Resource_Stamina, "SetByCaller.Resource.Stamina", "");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Resource_Health, "SetByCaller.Resource.Health", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Heal, "SetByCaller.Heal", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Combat_DamageDealt, "Event.Combat.DamageDealt", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Combat_DamageDealt_Physical, "Event.Combat.DamageDealt.Physical", "");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Combat_DamageDealt_Magic, "Event.Combat.DamageDealt.magic", "");
 }

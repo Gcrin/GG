@@ -26,8 +26,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, HealthRegenPercent);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MoveSpeed);
 	ATTRIBUTE_ACCESSORS(UGGUtilitySet, CooldownReduction);
-	ATTRIBUTE_ACCESSORS(UGGUtilitySet, PhysicalDamageAbsorption);
-	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MagicDamageAbsorption);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, PhysicalLifeSteal);
+	ATTRIBUTE_ACCESSORS(UGGUtilitySet, MagicLifeSteal);
 
 	mutable FLyraAttributeEvent OnStaminaRegenChanged;
 	mutable FLyraAttributeEvent OnStaminaRegenPercentChanged;
@@ -37,8 +37,8 @@ public:
 	mutable FLyraAttributeEvent OnHealthRegenPercentChanged;
 	mutable FLyraAttributeEvent OnMoveSpeedChanged;
 	mutable FLyraAttributeEvent OnCooldownReductionChanged;
-	mutable FLyraAttributeEvent OnPhysicalDamageAbsorptionChanged;
-	mutable FLyraAttributeEvent OnMagicDamageAbsorptionChanged;
+	mutable FLyraAttributeEvent OnPhysicalLifeStealChanged;
+	mutable FLyraAttributeEvent OnMagicLifeStealChanged;
 
 protected:
 
@@ -67,10 +67,10 @@ protected:
 	virtual void OnRep_CooldownReduction(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	virtual void OnRep_PhysicalDamageAbsorption(const FGameplayAttributeData& OldValue);
+	virtual void OnRep_PhysicalLifeSteal(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	virtual void OnRep_MagicDamageAbsorption(const FGameplayAttributeData& OldValue);
+	virtual void OnRep_MagicLifeSteal(const FGameplayAttributeData& OldValue);
 
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -112,10 +112,10 @@ private:
 	FGameplayAttributeData CooldownReduction;
 
 	// 물리 피해 흡수 (준 물리 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageAbsorption, Category = "GG|Utility", Meta = (DisplayName = "물리 피해 흡수", AllowPrivateAccess = true))
-	FGameplayAttributeData PhysicalDamageAbsorption;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalLifeSteal, Category = "GG|Utility", Meta = (DisplayName = "물리 피해 흡수", AllowPrivateAccess = true))
+	FGameplayAttributeData PhysicalLifeSteal;
 
 	// 마법 피해 흡수 (준 마법 피해의 일부를 체력으로 전환, 예: 0.05 = 5% 흡수)
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDamageAbsorption, Category = "GG|Utility", Meta = (DisplayName = "마법 피해 흡수", AllowPrivateAccess = true))
-	FGameplayAttributeData MagicDamageAbsorption;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicLifeSteal, Category = "GG|Utility", Meta = (DisplayName = "마법 피해 흡수", AllowPrivateAccess = true))
+	FGameplayAttributeData MagicLifeSteal;
 };
