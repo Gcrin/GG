@@ -142,6 +142,17 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 		DamageReduction = MagicDamageReduction;
 		Penetration = MagicPenetration;
 	}
+	else
+	{
+		const FString EffectName = Spec.Def ? Spec.Def->GetName() : TEXT("Unknown Effect");
+		ensureMsgf(
+			false,
+			TEXT(
+				"GGDamageExecution: GameplayEffect '%s' lacks a required Damage Type Tag (e.g., Damage.Type.Physical)."
+			), *EffectName);
+
+		return;
+	}
 
 	// 계산
 	float FinalDamage = 0.f;
@@ -161,21 +172,26 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 	FinalDamage = (((RealBaseDamage + SkillDamage) * SkillDamageMultiplier * ApplyCritMultiplier)
 		* (1.f + DamageAmp) * (1.f - (DamageReduction * (1.f - Penetration)))) - FlatDamageReduction;
 
+	FinalDamage = FMath::Max(0.f, FinalDamage);
+
+	float DamageToHealth = FinalDamage;
+
 	if (TargetShield > 0.f)
 	{
-		const float DamageToShield = FMath::Min(FinalDamage, TargetShield);
-		const float DamageToHealth = FinalDamage - DamageToShield;
+		const float DamageToShield = FMath::Min(DamageToHealth, TargetShield);
+		DamageToHealth -= DamageToShield;
 
-		// 최종 반환 : Shield
-		FinalDamage = FMath::Max(0.f, DamageToHealth);
-		OutExecutionOutput.AddOutputModifier(
-			FGameplayModifierEvaluatedData(UGGShieldSet::GetShieldDamageAttribute(), EGameplayModOp::Override, -DamageToShield));
+		// 보호막에 가해질 데미지 적용
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(
+				UGGShieldSet::GetShieldDamageAttribute(), EGameplayModOp::Override, -DamageToShield));
 	}
 	
-	// 최종 반환 : Health
-	FinalDamage = FMath::Max(0.f, FinalDamage);
-	OutExecutionOutput.AddOutputModifier(
-		FGameplayModifierEvaluatedData(ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, FinalDamage));
+	// 체력에 가해질 데미지 적용
+	if (DamageToHealth > 0.f)
+	{
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(
+			ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Override, DamageToHealth));
+	}
 
 #endif
 }
