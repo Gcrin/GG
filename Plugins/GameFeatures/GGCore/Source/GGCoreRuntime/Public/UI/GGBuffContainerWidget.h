@@ -82,6 +82,10 @@ protected:
 	UPROPERTY()
 	TArray<TObjectPtr<UGGBuffSlotWidget>> ActiveEffectWidgets;
 
+	/** 표시 대기 중인 이펙트들 */
+	UPROPERTY()
+	TArray<FGGStatusEffectMessage> PendingEffects;
+
 	/** 추적 중인 GameplayEffect Handle들 */
 	UPROPERTY()
 	TMap<FGameplayTag, FActiveGameplayEffectHandle> TrackedEffects;
@@ -127,6 +131,9 @@ protected:
 
 	/** 기존 이펙트 슬롯 찾기 */
 	UGGBuffSlotWidget* FindEffectSlot(const FGameplayTag& EffectTag);
+
+	/** 대기 중인 이펙트 슬롯 표시 */
+	void ProcessPendingEffects();
 
 	/** 이펙트 슬롯 제거 */
 	void RemoveEffectSlot(UGGBuffSlotWidget* SlotWidget);

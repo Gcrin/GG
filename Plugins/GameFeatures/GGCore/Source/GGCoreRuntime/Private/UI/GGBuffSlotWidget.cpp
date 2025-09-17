@@ -2,6 +2,8 @@
 
 
 #include "UI/GGBuffSlotWidget.h"
+
+#include "Blueprint/WidgetTree.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/Overlay.h"
@@ -20,9 +22,6 @@ UGGBuffSlotWidget::UGGBuffSlotWidget(const FObjectInitializer& ObjectInitializer
 void UGGBuffSlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	// 초기 상태를 빈 슬롯으로 설정
-	ClearBuff();
 }
 
 void UGGBuffSlotWidget::SetBuffData(const FBuffDisplayData& InBuffData)
@@ -33,8 +32,7 @@ void UGGBuffSlotWidget::SetBuffData(const FBuffDisplayData& InBuffData)
 	{
 		// UI 요소들 업데이트
 		UpdateBuffIcon();
-		// UpdateStackText();
-		UpdateDurationText();
+		UpdateDurationText(BuffData.RemainingDuration);
 		UpdateBorderColor();
 
 		// 슬롯 표시
@@ -47,9 +45,6 @@ void UGGBuffSlotWidget::SetBuffData(const FBuffDisplayData& InBuffData)
 	{
 		ClearBuff();
 	}
-
-	// 블루프린트에서 추가 처리할 수 있도록 이벤트 호출
-	OnBuffDataChanged(BuffData);
 }
 
 void UGGBuffSlotWidget::ClearBuff()
@@ -72,9 +67,6 @@ void UGGBuffSlotWidget::ClearBuff()
 	{
 		DurationText->SetText(FText::GetEmpty());
 	}
-
-	// 블루프린트 이벤트 호출
-	OnBuffDataChanged(BuffData);
 }
 
 void UGGBuffSlotWidget::UpdateBuffIcon()
@@ -91,7 +83,7 @@ void UGGBuffSlotWidget::UpdateBuffIcon()
 	}
 }
 
-void UGGBuffSlotWidget::UpdateDurationText()
+void UGGBuffSlotWidget::UpdateDurationText(float RemainingDuration)
 {
 	if (!DurationText)
 	{
@@ -107,7 +99,7 @@ void UGGBuffSlotWidget::UpdateDurationText()
 
 	if (BuffData.RemainingDuration > 0.0f)
 	{
-		const FString DurationString = FormatDurationText(BuffData.RemainingDuration);
+		const FString DurationString = FormatDurationText(RemainingDuration);
 		DurationText->SetText(FText::FromString(DurationString));
 		DurationText->SetVisibility(ESlateVisibility::Visible);
 	}

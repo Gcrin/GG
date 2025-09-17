@@ -4,7 +4,11 @@
 #include "UI/GGBuffContainerWidget.h"
 #include "UI/GGBuffSlotWidget.h"
 #include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
+#include "Widgets/SBoxPanel.h"
+#include "Components/TextBlock.h"
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
+#include "Blueprint/WidgetTree.h"
 #include "Player/GGPlayerState.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(GGBuffContainerWidget)
@@ -18,6 +22,7 @@ UGGBuffContainerWidget::UGGBuffContainerWidget(const FObjectInitializer& ObjectI
 void UGGBuffContainerWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	if (!IsDesignTime())
 	{
 		// AbilitySystemComponent 이벤트 바인딩
@@ -99,21 +104,35 @@ void UGGBuffContainerWidget::AddEffect(const FGGStatusEffectMessage& EffectMessa
 		DisplayData.bIsActive = true;
 
 		ExistingSlot->SetBuffData(DisplayData);
+
+		// 대기열에서 제거
+		PendingEffects.RemoveAll([&](const FGGStatusEffectMessage& Pending)
+		{
+			return Pending.EffectTag == EffectMessage.EffectTag;
+		});
 		return;
 	}
 
-	// 최대 슬롯 수 확인
-	if (ActiveEffectWidgets.Num() >= MaxEffectSlots)
+	// 즉시 표시할 수 있는지 확인
+	if (ActiveEffectWidgets.Num() < MaxEffectSlots)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Max effect slots reached (%d), cannot add new effect: %s"),
-		       MaxEffectSlots, *EffectMessage.EffectTag.ToString());
-		return;
+		// 새 이펙트 슬롯 생성
+		if (UGGBuffSlotWidget* NewSlot = CreateEffectSlot(EffectMessage))
+		{
+			ActiveEffectWidgets.Add(NewSlot);
+		}
 	}
-
-	// 새 이펙트 슬롯 생성
-	if (UGGBuffSlotWidget* NewSlot = CreateEffectSlot(EffectMessage))
+	else
 	{
-		ActiveEffectWidgets.Add(NewSlot);
+		// 대기열에 추가 (중복 체크)
+		PendingEffects.RemoveAll([&](const FGGStatusEffectMessage& Pending)
+		{
+			return Pending.EffectTag == EffectMessage.EffectTag;
+		});
+		PendingEffects.Add(EffectMessage);
+
+		UE_LOG(LogTemp, Log, TEXT("Effect added to pending queue: %s"),
+		       *EffectMessage.EffectTag.ToString());
 	}
 }
 
@@ -141,12 +160,22 @@ void UGGBuffContainerWidget::ClearAllEffects()
 
 	ActiveEffectWidgets.Empty();
 	TrackedEffects.Empty();
+	PendingEffects.Empty();
 }
 
 bool UGGBuffContainerWidget::ShouldHandleTag(const FGameplayTag& Tag) const
 {
 	// 정확히 일치하거나 하위 태그인 경우
-	return HandledTags.HasTag(Tag) || HandledTags.HasTagExact(Tag.RequestDirectParent());
+	// return HandledTags.HasTag(Tag) || HandledTags.HasTagExact(Tag.RequestDirectParent());
+	// HandledTags의 각 태그에 대해 하위 태그인지 확인
+	for (const FGameplayTag& HandledTag : HandledTags)
+	{
+		if (Tag.MatchesTag(HandledTag))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 ULyraAbilitySystemComponent* UGGBuffContainerWidget::GetAbilitySystemComponent()
@@ -176,8 +205,10 @@ void UGGBuffContainerWidget::UpdateEffectsFromGameplayEffects()
 		return;
 	}
 
+	// 배열 복사해서 사용 (반복 중 배열 변경 방지)
+	TArray<TObjectPtr<UGGBuffSlotWidget>> WidgetsCopy = ActiveEffectWidgets;
 	// 현재 활성 이펙트들의 실시간 상태 업데이트
-	for (UGGBuffSlotWidget* SlotWidget : ActiveEffectWidgets)
+	for (UGGBuffSlotWidget* SlotWidget : WidgetsCopy)
 	{
 		if (!SlotWidget || !SlotWidget->IsBuffActive())
 		{
@@ -189,8 +220,11 @@ void UGGBuffContainerWidget::UpdateEffectsFromGameplayEffects()
 
 		if (GetEffectCurrentState(EffectTag, RemainingTime, Duration))
 		{
+			// infinite이면 스킵
+			if (Duration < 0.0f && RemainingTime < 0.0f) continue;
+
 			// 슬롯 위젯의 쿨다운 업데이트
-			SlotWidget->UpdateDurationText();
+			SlotWidget->UpdateDurationText(RemainingTime);
 
 			// 시간이 끝났으면 제거
 			if (RemainingTime <= 0.0f)
@@ -270,6 +304,35 @@ UGGBuffSlotWidget* UGGBuffContainerWidget::FindEffectSlot(const FGameplayTag& Ef
 	return nullptr;
 }
 
+void UGGBuffContainerWidget::ProcessPendingEffects()
+{
+	// 표시 가능한 슬롯이 있는 동안 대기 이펙트들을 처리
+	while (ActiveEffectWidgets.Num() < MaxEffectSlots && PendingEffects.Num() > 0)
+	{
+		FGGStatusEffectMessage PendingEffect = PendingEffects[0];
+		PendingEffects.RemoveAt(0);
+
+		// 아직 활성 상태인지 확인
+		float RemainingTime, Duration;
+		if (GetEffectCurrentState(PendingEffect.EffectTag, RemainingTime, Duration))
+		{
+			// 최신 시간으로 업데이트
+			PendingEffect.RemainingTime = RemainingTime;
+			PendingEffect.Duration = Duration;
+
+			if (RemainingTime > 0.0f)
+			{
+				if (UGGBuffSlotWidget* NewSlot = CreateEffectSlot(PendingEffect))
+				{
+					ActiveEffectWidgets.Add(NewSlot);
+					UE_LOG(LogTemp, Log, TEXT("Pending effect now displayed: %s"),
+					       *PendingEffect.EffectTag.ToString());
+				}
+			}
+		}
+	}
+}
+
 void UGGBuffContainerWidget::RemoveEffectSlot(UGGBuffSlotWidget* SlotWidget)
 {
 	if (!SlotWidget || !EffectSlotContainer)
@@ -282,6 +345,9 @@ void UGGBuffContainerWidget::RemoveEffectSlot(UGGBuffSlotWidget* SlotWidget)
 
 	// UI에서 제거 (자동으로 왼쪽 정렬됨)
 	EffectSlotContainer->RemoveChild(SlotWidget);
+
+	// 대기 중인 이펙트가 있으면 표시
+	ProcessPendingEffects();
 }
 
 void UGGBuffContainerWidget::OnSlotEffectExpired(const FGameplayTag& ExpiredEffectTag)
@@ -319,7 +385,16 @@ void UGGBuffContainerWidget::OnGameplayEffectRemoved(const FActiveGameplayEffect
 
 	for (const FGameplayTag& EffectTag : EffectTags)
 	{
-		RemoveEffect(EffectTag);
+		// 현재 추적 중인 핸들과 제거된 핸들이 같을 때만 UI에서 제거
+		if (FActiveGameplayEffectHandle* TrackedHandle = TrackedEffects.Find(EffectTag))
+		{
+			if (*TrackedHandle == RemovedEffect.Handle)
+			{
+				// 현재 추적 중인 이펙트가 제거되었으므로 UI에서도 제거
+				RemoveEffect(EffectTag);
+			}
+			// else: 다른 핸들이 제거된 것이므로 UI는 그대로 유지
+		}
 	}
 }
 
@@ -337,6 +412,10 @@ TArray<FGameplayTag> UGGBuffContainerWidget::ExtractEffectTagsFromEffect(const F
 		if (ShouldHandleTag(Tag))
 		{
 			EffectTags.Add(Tag);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Tag: %s"), *Tag.ToString());
 		}
 	}
 

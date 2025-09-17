@@ -67,7 +67,7 @@ public:
 	void ClearBuff();
 
 	/** 지속시간 텍스트 업데이트 */
-	void UpdateDurationText();
+	void UpdateDurationText(float RemainingDuration);
 
 	/** 현재 버프가 활성 상태인지 */
 	UFUNCTION(BlueprintPure, Category = "Buff")
@@ -119,10 +119,6 @@ protected:
 	bool bHideDurationForPermanent = true;
 
 protected:
-	/** UI 업데이트 */
-	UFUNCTION(BlueprintImplementableEvent, Category = "Buff")
-	void OnBuffDataChanged(const FBuffDisplayData& NewBuffData);
-
 	/** 아이콘 설정 */
 	void UpdateBuffIcon();
 
