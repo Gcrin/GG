@@ -6,6 +6,7 @@
 #include "AbilitySystem/Attributes/GGDefenseSet.h"
 #include "AbilitySystem/Attributes/GGOffenseSet.h"
 #include "AbilitySystem/Attributes/GGResourceSet.h"
+#include "AbilitySystem/Attributes/GGShieldSet.h"
 #include "AbilitySystem/Attributes/GGUtilitySet.h"
 
 AGGPlayerState::AGGPlayerState(const FObjectInitializer& ObjectInitializer)
@@ -15,4 +16,5 @@ AGGPlayerState::AGGPlayerState(const FObjectInitializer& ObjectInitializer)
 	OffenseSet = CreateDefaultSubobject<UGGOffenseSet>(TEXT("OffenseSet"));
 	DefenseSet = CreateDefaultSubobject<UGGDefenseSet>(TEXT("DefenseSet"));
 	UtilitySet = CreateDefaultSubobject<UGGUtilitySet>(TEXT("UtilitySet"));
+	ShieldSet = CreateDefaultSubobject<UGGShieldSet>(TEXT("ShieldSet"));
 }
