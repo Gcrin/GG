@@ -14,4 +14,8 @@ namespace GGGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Mana);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Stamina);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Resource_Health);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Heal);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_DamageDealt);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_DamageDealt_Physical);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Combat_DamageDealt_Magic);
 };

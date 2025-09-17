@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Executions/GGDamageExecution.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/Attributes/GGDefenseSet.h"
 #include "AbilitySystem/Attributes/GGOffenseSet.h"
 #include "AbilitySystem/Attributes/LyraCombatSet.h"
@@ -50,7 +51,7 @@ struct FDamageStatics
 		FlatDamageReductionDef = FGameplayEffectAttributeCaptureDefinition(
 			UGGDefenseSet::GetFlatDamageReductionAttribute(), EGameplayEffectAttributeCaptureSource::Target, true);
 		ShieldDef = FGameplayEffectAttributeCaptureDefinition(
-				UGGShieldSet::GetShieldAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+			UGGShieldSet::GetShieldAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
 };
 
@@ -127,6 +128,7 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 	float DamageAmp = 0.f;
 	float DamageReduction = 0.f;
 	float Penetration = 0.f;
+	FGameplayTag EventTag;
 
 	if (Spec.Def->GetGrantedTags().HasTag(GGGameplayTags::Damage_Type_Physical))
 	{
@@ -134,6 +136,7 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 		DamageAmp = PhysicalDamageAmp;
 		DamageReduction = PhysicalDamageReduction;
 		Penetration = PhysicalPenetration;
+		EventTag = GGGameplayTags::Event_Combat_DamageDealt_Physical;
 	}
 	else if (Spec.Def->GetGrantedTags().HasTag(GGGameplayTags::Damage_Type_Magic))
 	{
@@ -141,6 +144,7 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 		DamageAmp = MagicDamageAmp;
 		DamageReduction = MagicDamageReduction;
 		Penetration = MagicPenetration;
+		EventTag = GGGameplayTags::Event_Combat_DamageDealt_Magic;
 	}
 	else
 	{
@@ -191,6 +195,21 @@ void UGGDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecu
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(
 			ULyraHealthSet::GetDamageAttribute(), EGameplayModOp::Additive, DamageToHealth));
+
+		UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
+		AActor* SourceActor = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+
+		if (SourceActor && EventTag.IsValid())
+		{
+			FGameplayEventData EventData;
+			EventData.EventTag = EventTag;
+			EventData.EventMagnitude = DamageToHealth;
+			EventData.Instigator = SourceActor;
+			EventData.Target = ExecutionParams.GetTargetAbilitySystemComponent()->GetAvatarActor();
+			EventData.ContextHandle = ExecutionParams.GetOwningSpec().GetEffectContext();
+
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(SourceActor, EventData.EventTag, EventData);
+		}
 	}
 
 #endif
