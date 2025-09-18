@@ -14,8 +14,6 @@ UGGCameraMode_FirstPerson::UGGCameraMode_FirstPerson()
 
 void UGGCameraMode_FirstPerson::UpdateView(float DeltaTime)
 {
-	Super::UpdateView(DeltaTime);
-
 	ACharacter* CharacterOwner = Cast<ACharacter>(GetTargetActor());
 	if (!CharacterOwner) return;
 
@@ -37,6 +35,10 @@ void UGGCameraMode_FirstPerson::UpdateView(float DeltaTime)
 		{
 			View.Location = TargetLocation;
 		}
+	}
+	else
+	{
+		Super::UpdateView(DeltaTime);
 	}
 	
 	if (!ViewOffset.IsZero())
