@@ -102,6 +102,7 @@ void UGGBuffContainerWidget::AddEffect(const FGGStatusEffectMessage& EffectMessa
 		DisplayData.RemainingDuration = EffectMessage.RemainingTime;
 		DisplayData.TotalDuration = EffectMessage.Duration;
 		DisplayData.bIsActive = true;
+		DisplayData.bIsBuff = EffectMessage.bIsBuff;
 
 		ExistingSlot->SetBuffData(DisplayData);
 
@@ -165,8 +166,6 @@ void UGGBuffContainerWidget::ClearAllEffects()
 
 bool UGGBuffContainerWidget::ShouldHandleTag(const FGameplayTag& Tag) const
 {
-	// 정확히 일치하거나 하위 태그인 경우
-	// return HandledTags.HasTag(Tag) || HandledTags.HasTagExact(Tag.RequestDirectParent());
 	// HandledTags의 각 태그에 대해 하위 태그인지 확인
 	for (const FGameplayTag& HandledTag : HandledTags)
 	{
@@ -283,6 +282,7 @@ UGGBuffSlotWidget* UGGBuffContainerWidget::CreateEffectSlot(const FGGStatusEffec
 	DisplayData.RemainingDuration = EffectMessage.RemainingTime;
 	DisplayData.TotalDuration = EffectMessage.Duration;
 	DisplayData.bIsActive = true;
+	DisplayData.bIsBuff = EffectMessage.bIsBuff;
 
 	NewSlot->SetBuffData(DisplayData);
 
@@ -373,6 +373,7 @@ void UGGBuffContainerWidget::OnGameplayEffectAdded(UAbilitySystemComponent* ASC,
 		EffectMessage.Duration = Spec.GetDuration();
 		EffectMessage.RemainingTime = Spec.GetDuration();
 		EffectMessage.bIsActive = true;
+		EffectMessage.bIsBuff = !EffectTag.ToString().Contains("Debuff");
 
 		AddEffect(EffectMessage);
 	}
