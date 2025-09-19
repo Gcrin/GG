@@ -30,12 +30,16 @@ struct FGGStatusEffectMessage
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsActive = true;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsBuff = true;
+
 	FGGStatusEffectMessage()
 	{
 		EffectTag = FGameplayTag::EmptyTag;
 		Duration = 0.0f;
 		RemainingTime = 0.0f;
 		bIsActive = true;
+		bIsBuff = true;
 	}
 };
 
@@ -69,10 +73,6 @@ protected:
 	/** 이펙트 슬롯 위젯 클래스 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StatusEffect")
 	TSubclassOf<UGGBuffSlotWidget> EffectSlotWidgetClass;
-
-	/** 이펙트 아이콘 데이터 에셋 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StatusEffect")
-	TObjectPtr<UGGBuffIconDataAsset> EffectIconDataAsset;
 
 	/** 최대 표시할 이펙트 개수 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StatusEffect", meta = (ClampMin = "1", ClampMax = "20"))
